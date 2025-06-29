@@ -32,8 +32,10 @@ class LineGraphView:
     --------
     >>> import networkx as nx
     >>> import networkx_linegraph as nxlg
-    >>> graph = nx.path_graph(4)
+    >>> graph = nx.cycle_graph(4)
     >>> line_graph = nxlg.LineGraphView(graph)
+    >>> list(line_graph.edges)
+    [((0, 1), (3, 0)), ((0, 1), (1, 2)), ((0, 3), (3, 2)), ((1, 2), (2, 3))]
     >>> line_graph.has_edge((0, 1), (1, 2))
     True
 
