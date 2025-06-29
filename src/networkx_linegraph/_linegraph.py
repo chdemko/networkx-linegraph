@@ -58,11 +58,11 @@ class LineGraphView:
         --------
         >>> import networkx as nx
         >>> import networkx_linegraph as nxlg
-        >>> G = nx.Graph(name="foo")
-        >>> str(nxlg.LineGraphView(G))
+        >>> graph = nx.Graph(name="foo")
+        >>> str(nxlg.LineGraphView(graph))
         "LineGraphView of Graph named 'foo' with 0 nodes and 0 edges"
-        >>> G = nx.path_graph(3)
-        >>> str(nxlg.LineGraphView(G))
+        >>> graph = nx.path_graph(3)
+        >>> str(nxlg.LineGraphView(graph))
         'LineGraphView of Graph with 3 nodes and 2 edges'
 
         """
@@ -414,7 +414,7 @@ class LineGraphView:
         self,
     ) -> Collection[tuple[tuple[Hashable, Hashable], tuple[Hashable, Hashable]]]:
         """
-        Get a collection-like view of the edges of the line graph.
+        Get a collection-like view of the line graph edges.
 
         The returned object supports membership testing, iteration, and length queries,
         providing an interface similar to a set of edges. Each edge is represented as a
