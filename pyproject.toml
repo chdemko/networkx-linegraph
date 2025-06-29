@@ -1,0 +1,141 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "networkx-linegraph"
+dynamic = ["version"]
+description = ''
+readme = "README.md"
+requires-python = ">=3.8"
+license = "BSD-3-Clause"
+license-files = ["LICENSE"]
+keywords = []
+authors = [
+  { name = "Christophe Demko", email = "chdemko@gmail.com" },
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: Implementation :: CPython",
+  "Programming Language :: Python :: Implementation :: PyPy",
+]
+dependencies = [
+  "networkx~=3.5"
+]
+
+[project.urls]
+Documentation = "https://github.com/chdemko/networkx-linegraph#readme"
+Issues = "https://github.com/chdemko/networkx-linegraph/issues"
+Source = "https://github.com/chdemko/networkx-linegraph"
+
+[tool.hatch.version]
+path = "src/networkx_linegraph/__about__.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/networkx_linegraph"]
+
+[tool.coverage.report]
+exclude_lines = [
+  "no cov",
+  "if __name__ == .__main__.:",
+  "if TYPE_CHECKING:",
+  "return NotImplemented",
+  "raise NotImplementedError",
+  "import doctest",
+  "doctest.testmod()",
+  "coverage: ignore"
+]
+exclude_also = [
+  "def __repr__",
+  "raise NotImplementedError",
+  "if __name__ == .__main__.:",
+  "if TYPE_CHECKING:",
+  "class .*\\bProtocol\\):",
+  "@(abc\\.)?abstractmethod"
+]
+
+[tool.coverage.run]
+include = [
+  "src/*"
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = [
+  # Use a regular `assert` instead of unittest-style `assertEqual`
+  "PT009",
+]
+
+[tool.ruff]
+# Allow lines to be as long as 88.
+line-length = 88
+target-version = "py310"
+
+[tool.mypy]
+ignore_missing_imports = true
+no_implicit_optional = true
+# equivalent to --strict option
+warn_unused_configs = true
+disallow_any_generics = true
+disallow_subclassing_any = true
+disallow_untyped_calls = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_return_any = true
+no_implicit_reexport = true
+strict_equality = true
+extra_checks = true
+mypy_path = "src"
+
+[tool.hatch.envs.hatch-static-analysis]
+dependencies = [
+  # Types
+  # Formatter
+  "black[jupyter]~=25.1",
+  # Style checkers
+  "doc8~=2.0",
+  "mypy~=1.16",
+  "teyit~=0.4",
+  "refurb~=2.0",
+  "ruff~=0.12"
+]
+
+[tool.hatch.envs.hatch-static-analysis.scripts]
+format-check = [
+  "black --check --diff {args:src tests docs}",
+  "doc8 -q {args:docs README.md} -e .rst -e .md"
+]
+format-fix = [
+  "black {args:src tests docs}"
+]
+lint-check = [
+  "ruff check {args:src tests docs}",
+  "refurb {args:src tests docs}",
+  "mypy --package networkx_linegraph",
+  "teyit --show-stats --fail-on-change {args:tests}"
+]
+lint-fix = [
+  "ruff check --fix {args:src tests docs}"
+]
+
+[tool.hatch.envs.lint]
+dependencies = [
+  "graphviz~=0.21",
+  "slotscheck~=0.19",
+  "pylint~=3.3"
+]
+
+[tool.hatch.envs.lint.scripts]
+check = [
+  "slotscheck {args:src}",
+  "pylint {args:src}"
+]

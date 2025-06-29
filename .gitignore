@@ -1,0 +1,10 @@
+.idea
+.vscode
+.venv
+.coverage
+build
+dist
+junit.xml
+**/.ipynb_checkpoints
+**/__pycache__
+icon.png
