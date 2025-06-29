@@ -5,15 +5,17 @@ from __future__ import annotations
 import itertools
 from collections.abc import Collection, Hashable
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, TypeVar, Generic
 
 if TYPE_CHECKING:
     from collections.abc import Iterator
 
     from networkx import DiGraph, Graph
 
+_N = TypeVar("_N", bound=Hashable)
 
-class LineGraphView:
+
+class LineGraphView(Generic[_N]):
     """
     A read-only view of the line graph of a given graph.
 
@@ -41,7 +43,7 @@ class LineGraphView:
 
     """
 
-    def __init__(self, graph: Graph | DiGraph) -> None:
+    def __init__(self, graph: Graph[_N] | DiGraph[_N]) -> None:
         self._graph = graph
 
     def __str__(self) -> str:
@@ -68,13 +70,13 @@ class LineGraphView:
         """
         return f"{type(self).__name__} of {self._graph}"
 
-    def __iter__(self) -> Iterator[tuple[Hashable, Hashable]]:
+    def __iter__(self) -> Iterator[tuple[_N, _N]]:
         """
         Return an iterator over the edges of the underlying graph.
 
         Returns
         -------
-        Iterator[tuple[Hashable, Hashable]]
+        Iterator[tuple[_N, _N]]
             Tuples representing the edges of the graph, where each element is a node.
 
         Examples
@@ -211,7 +213,7 @@ class LineGraphView:
         """
         return len(self._graph.edges)
 
-    def has_node(self, node: tuple[Hashable, Hashable]) -> bool:
+    def has_node(self, node: tuple[_N, _N]) -> bool:
         """
         Return True if the line graph contains the specified node.
 
@@ -246,11 +248,7 @@ class LineGraphView:
         """
         return node in self
 
-    def has_edge(
-        self,
-        node: tuple[Hashable, Hashable],
-        other: tuple[Hashable, Hashable],
-    ) -> bool:
+    def has_edge(self, node: tuple[_N, _N], other: tuple[_N, _N]) -> bool:
         """
         Return True if the edge (node, other) is in the line graph.
 
@@ -294,10 +292,7 @@ class LineGraphView:
             return len(set(node) & set(other)) == 1
         return False
 
-    def neighbors(
-        self,
-        node: tuple[Hashable, Hashable],
-    ) -> Collection[tuple[Hashable, Hashable]]:
+    def neighbors(self, node: tuple[_N, _N]) -> Collection[tuple[_N, _N]]:
         """
         Returns the neighbors of node.
 
@@ -308,7 +303,7 @@ class LineGraphView:
 
         Returns
         -------
-        Collection[tuple[Hashable, Hashable]]
+        Collection[tuple[_N, _N]]
             A collection of neighboring nodes in the line graph, where each neighbor
             is a tuple representing an edge in the original graph.
 
@@ -357,7 +352,7 @@ class LineGraphView:
 
         """
 
-        class Neighbors(Collection[tuple[Hashable, Hashable]]):
+        class Neighbors:
             """
             A collection representing the neighbors of a node in a line graph.
 
@@ -390,7 +385,7 @@ class LineGraphView:
                     - 2
                 )
 
-            def __iter__(self) -> Iterator[tuple[Hashable, Hashable]]:
+            def __iter__(self) -> Iterator[tuple[_N, _N]]:
                 if line_graph.is_directed():
                     return ((node[1], dest) for dest in line_graph.graph.adj[node[1]])
                 return itertools.chain(
@@ -410,9 +405,7 @@ class LineGraphView:
         return Neighbors()
 
     @cached_property
-    def edges(
-        self,
-    ) -> Collection[tuple[tuple[Hashable, Hashable], tuple[Hashable, Hashable]]]:
+    def edges(self) -> Collection[tuple[tuple[_N, _N], tuple[_N, _N]]]:
         """
         Get a collection-like view of the line graph edges.
 
@@ -423,7 +416,7 @@ class LineGraphView:
 
         Returns
         -------
-        Collection[tuple[tuple[Hashable, Hashable], tuple[Hashable, Hashable]]]
+        Collection[tuple[tuple[_N, _N], tuple[_N, _N]]]
             A view of edges.
 
         Examples
@@ -467,14 +460,7 @@ class LineGraphView:
 
         """
 
-        class Edges(
-            Collection[
-                tuple[
-                    tuple[Hashable, Hashable],
-                    tuple[Hashable, Hashable],
-                ]
-            ]
-        ):
+        class Edges:
             """
             A collection-like view of the edges in the line graph.
 
@@ -504,9 +490,7 @@ class LineGraphView:
                 except TypeError:
                     return False
 
-            def __iter__(
-                self,
-            ) -> Iterator[tuple[tuple[Hashable, Hashable], tuple[Hashable, Hashable]]]:
+            def __iter__(self) -> Iterator[tuple[tuple[_N, _N], tuple[_N, _N]]]:
                 if line_graph.is_directed():
                     for node in line_graph:
                         for dest in line_graph.neighbors(node):
@@ -551,7 +535,7 @@ class LineGraphView:
         return self._graph.is_directed()  # type: ignore[no-any-return]
 
     @property
-    def graph(self) -> Graph | DiGraph:
+    def graph(self) -> Graph[_N] | DiGraph[_N]:
         """
         Get the underlying graph.
 
