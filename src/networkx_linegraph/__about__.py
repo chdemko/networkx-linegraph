@@ -1,4 +1,3 @@
-# SPDX-FileCopyrightText: 2025-present Christophe Demko <chdemko@gmail.com>
-#
-# SPDX-License-Identifier: MIT
+"""Version number."""
+
 __version__ = "0.0.1"

@@ -3,12 +3,12 @@
 from __future__ import annotations
 
 import itertools
-from collections.abc import Collection
+from collections.abc import Collection, Hashable
 from functools import cached_property
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from collections.abc import Hashable, Iterator
+    from collections.abc import Iterator
 
     from networkx import DiGraph, Graph
 
@@ -360,7 +360,8 @@ class LineGraphView:
             This class provides a read-only view of the neighboring nodes (edges)
             for a given node (edge) in the line graph.
 
-            It implements the Collection interface, supporting membership tests, iteration, and length queries.
+            It implements the Collection interface, supporting membership tests,
+            iteration, and length queries.
 
             Notes
             -----
@@ -553,7 +554,7 @@ class LineGraphView:
         Returns
         -------
         Graph | DiGraph
-            The graph
+            The underlying graph
 
         """
         return self._graph

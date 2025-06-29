@@ -27,12 +27,12 @@ repos:
     pass_filenames: false
   - id: test
     name: test
-    entry: hatch test --suppress-no-test-exit-code
+    entry: hatch test
     language: system
     pass_filenames: false
   - id: doctest
     name: doctest
-    entry: hatch test --suppress-no-test-exit-code --doctest-modules src
+    entry: hatch test --doctest-modules src
     language: system
     pass_filenames: false
   - id: build

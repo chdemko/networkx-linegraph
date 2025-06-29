@@ -7,12 +7,12 @@ name = "networkx-linegraph"
 dynamic = ["version"]
 description = ''
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.11"
 license = "BSD-3-Clause"
 license-files = ["LICENSE"]
 keywords = []
 authors = [
-  { name = "Christophe Demko", email = "chdemko@gmail.com" },
+  {name = "Christophe Demko", email = "chdemko@gmail.com"}
 ]
 classifiers = [
   "Development Status :: 4 - Beta",
@@ -23,7 +23,7 @@ classifiers = [
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: Implementation :: CPython",
-  "Programming Language :: Python :: Implementation :: PyPy",
+  "Programming Language :: Python :: Implementation :: PyPy"
 ]
 dependencies = [
   "networkx~=3.5"
@@ -39,62 +39,6 @@ path = "src/networkx_linegraph/__about__.py"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/networkx_linegraph"]
-
-[tool.coverage.report]
-exclude_lines = [
-  "no cov",
-  "if __name__ == .__main__.:",
-  "if TYPE_CHECKING:",
-  "return NotImplemented",
-  "raise NotImplementedError",
-  "import doctest",
-  "doctest.testmod()",
-  "coverage: ignore"
-]
-exclude_also = [
-  "def __repr__",
-  "raise NotImplementedError",
-  "if __name__ == .__main__.:",
-  "if TYPE_CHECKING:",
-  "class .*\\bProtocol\\):",
-  "@(abc\\.)?abstractmethod"
-]
-
-[tool.coverage.run]
-include = [
-  "src/*"
-]
-
-[tool.ruff.lint.per-file-ignores]
-"tests/*" = [
-  # Use a regular `assert` instead of unittest-style `assertEqual`
-  "PT009",
-]
-
-[tool.ruff]
-# Allow lines to be as long as 88.
-line-length = 88
-target-version = "py310"
-
-[tool.mypy]
-ignore_missing_imports = true
-no_implicit_optional = true
-# equivalent to --strict option
-warn_unused_configs = true
-disallow_any_generics = true
-disallow_subclassing_any = true
-disallow_untyped_calls = true
-disallow_untyped_defs = true
-disallow_incomplete_defs = true
-check_untyped_defs = true
-disallow_untyped_decorators = true
-warn_redundant_casts = true
-warn_unused_ignores = true
-warn_return_any = true
-no_implicit_reexport = true
-strict_equality = true
-extra_checks = true
-mypy_path = "src"
 
 [tool.hatch.envs.hatch-static-analysis]
 dependencies = [
@@ -139,3 +83,59 @@ check = [
   "slotscheck {args:src}",
   "pylint {args:src}"
 ]
+
+[tool.coverage.report]
+exclude_lines = [
+  "no cov",
+  "if __name__ == .__main__.:",
+  "if TYPE_CHECKING:",
+  "return NotImplemented",
+  "raise NotImplementedError",
+  "import doctest",
+  "doctest.testmod()",
+  "coverage: ignore"
+]
+exclude_also = [
+  "def __repr__",
+  "raise NotImplementedError",
+  "if __name__ == .__main__.:",
+  "if TYPE_CHECKING:",
+  "class .*\\bProtocol\\):",
+  "@(abc\\.)?abstractmethod"
+]
+
+[tool.coverage.run]
+include = [
+  "src/*"
+]
+
+[tool.ruff]
+# Allow lines to be as long as 88.
+line-length = 88
+target-version = "py310"
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = [
+  # Use a regular `assert` instead of unittest-style `assertEqual`
+  "PT009"
+]
+
+[tool.mypy]
+ignore_missing_imports = true
+no_implicit_optional = true
+# equivalent to --strict option
+warn_unused_configs = true
+disallow_any_generics = true
+disallow_subclassing_any = true
+disallow_untyped_calls = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_return_any = true
+no_implicit_reexport = true
+strict_equality = true
+extra_checks = true
+mypy_path = "src"

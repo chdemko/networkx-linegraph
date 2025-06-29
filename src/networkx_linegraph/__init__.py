@@ -1,6 +1,6 @@
-# SPDX-FileCopyrightText: 2025-present Christophe Demko <chdemko@gmail.com>
-#
-# SPDX-License-Identifier: MIT
+"""
+:mod:`networkx_linegraph` module
+"""
 
 from ._linegraph import LineGraphView  # noqa: TID252
 
