@@ -159,7 +159,9 @@ class LineGraphView:
 
     def number_of_nodes(self) -> int:
         """
-        Return the number of nodes in the line graph. Use: 'line_graph.number_of_nodes()'.
+        Return the number of nodes in the line graph.
+
+        Use: 'line_graph.number_of_nodes()'.
 
         Returns
         -------
@@ -209,7 +211,7 @@ class LineGraphView:
         """
         return len(self._graph.edges)
 
-    def has_node(self, node: object) -> int:
+    def has_node(self, node: tuple[Hashable, Hashable]) -> bool:
         """
         Return True if the line graph contains the specified node.
 
@@ -246,21 +248,21 @@ class LineGraphView:
 
     def has_edge(
         self,
-        u: tuple[Hashable, Hashable],
-        v: tuple[Hashable, Hashable],
+        node: tuple[Hashable, Hashable],
+        other: tuple[Hashable, Hashable],
     ) -> bool:
         """
-        Return True if the edge (u, v) is in the line graph.
+        Return True if the edge (node, other) is in the line graph.
 
         Parameters
         ----------
-        u, v
-            u and v are pairs of nodes representing edges in the original graph.
+        node, other
+            node and other are pairs of nodes representing edges in the original graph.
 
         Returns
         -------
         bool
-            True if the edge (u, v) exists in the line graph, False otherwise.
+            True if the edge (node, other) exists in the line graph, False otherwise.
 
         Examples
         --------
@@ -275,21 +277,21 @@ class LineGraphView:
         >>> line_graph.has_edge((0, 1), (1, 2))  # using two nodes
         True
         >>> e = ((0, 1), (1, 2))
-        >>> line_graph.has_edge(*e)  #  e is a 2-tuple (u, v)
+        >>> line_graph.has_edge(*e)  #  e is a 2-tuple (node, other)
         True
 
         Notes
         -----
         In a line graph, nodes represent edges of the original graph. An edge exists
         between two nodes (edges of the original graph) if they are consecutive
-        (share a node) in the original graph. For directed graphs, the edge (u, v)
-        exists if the target of u is the source of v.
+        (share a node) in the original graph. For directed graphs, the edge
+        (node, other) exists if the target of node is the source of other.
 
         """
-        if u in self._graph.edges and v in self._graph.edges:
+        if node in self._graph.edges and other in self._graph.edges:
             if self.is_directed():
-                return u[1] == v[0]
-            return len(set(u) & set(v)) == 1
+                return node[1] == other[0]
+            return len(set(node) & set(other)) == 1
         return False
 
     def neighbors(
@@ -376,8 +378,8 @@ class LineGraphView:
             def __repr__(self) -> str:
                 return f"<{self.__class__.__name__} object at 0x{id(self):x}>"
 
-            def __contains__(self, dest: object) -> bool:
-                return line_graph.has_edge(node, dest)  # type: ignore[arg-type]
+            def __contains__(self, other: object) -> bool:
+                return line_graph.has_edge(node, other)  # type: ignore[arg-type]
 
             def __len__(self) -> int:
                 if line_graph.is_directed():
