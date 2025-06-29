@@ -84,6 +84,16 @@ check = [
   "pylint {args:src}"
 ]
 
+[tool.hatch.envs.hatch-test.scripts]
+run = "pytest{env:HATCH_TEST_ARGS:} {args}"
+run-cov = "coverage run -m pytest{env:HATCH_TEST_ARGS:} {args}"
+cov-combine = "coverage combine"
+cov-report = [
+  "coverage report",
+  "coverage xml",
+  "coverage html"
+]
+
 [tool.coverage.report]
 exclude_lines = [
   "no cov",
@@ -108,6 +118,12 @@ exclude_also = [
 include = [
   "src/*"
 ]
+
+[tool.coverage.html]
+directory = "build/coverage/html"
+
+[tool.coverage.xml]
+output = "build/coverage.xml"
 
 [tool.ruff]
 # Allow lines to be as long as 88.
