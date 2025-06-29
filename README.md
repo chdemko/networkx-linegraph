@@ -5,7 +5,7 @@
 
 -----
 
-A Python package to efficiently compute the [line graph](https://en.wikipedia.org/wiki/Line_graph) of a graph using [NetworkX](https://networkx.org/) using a view on the underlying graph.
+A Python package to efficiently compute the [line graph](https://en.wikipedia.org/wiki/Line_graph) of a graph with [NetworkX](https://networkx.org/) via a view on the underlying graph.
 
 Useful for graph theory, network analysis, and related applications.
 
@@ -40,6 +40,8 @@ line_graph.has_edge((0, 1), (1, 2))
 ```
 
 ## Build
+
+Install [`hatch`](https://hatch.pypa.io/latest/install/), then:
 
 ```console
 hatch build
