@@ -43,7 +43,7 @@ class LineGraphView(Generic[_N]):
 
     """
 
-    def __init__(self, graph: Graph[_N] | DiGraph[_N]) -> None:
+    def __init__(self, graph: Graph[_N] | DiGraph[_N] | LineGraphView[_N]) -> None:
         self._graph = graph
 
     def __str__(self) -> str:
@@ -90,8 +90,7 @@ class LineGraphView(Generic[_N]):
         >>> list(line_graph)
         [(0, 1), (1, 2), (2, 3)]
         """
-
-        return iter(self._graph.edges)
+        return iter(self._graph.edges)  # type: ignore[arg-type]
 
     def __contains__(self, node: object) -> bool:
         """
@@ -129,7 +128,7 @@ class LineGraphView(Generic[_N]):
 
         """
         try:
-            return self._graph.has_edge(*node)  # type: ignore[no-any-return]
+            return self._graph.has_edge(*node)  # type: ignore[misc]
         except TypeError:
             return False
 
@@ -378,25 +377,36 @@ class LineGraphView(Generic[_N]):
 
             def __len__(self) -> int:
                 if line_graph.is_directed():
-                    return len(line_graph.graph.adj[node[1]])
+                    if isinstance(line_graph.graph, line_graph.__class__):
+                        return len(line_graph.graph.neighbors(node[1]))  # type: ignore[arg-type]
+                    return len(line_graph.graph.adj[node[1]])  # type: ignore[union-attr]
+                if isinstance(line_graph.graph, line_graph.__class__):
+                    return (
+                        len(line_graph.graph.neighbors(node[0]))  # type: ignore[arg-type]
+                        + len(line_graph.graph.neighbors(node[1]))  # type: ignore[arg-type]
+                        - 2
+                    )
                 return (
-                    len(line_graph.graph.adj[node[0]])
-                    + len(line_graph.graph.adj[node[1]])
+                    len(line_graph.graph.adj[node[0]])  # type: ignore[union-attr]
+                    + len(line_graph.graph.adj[node[1]])  # type: ignore[union-attr]
                     - 2
                 )
 
             def __iter__(self) -> Iterator[tuple[_N, _N]]:
                 if line_graph.is_directed():
-                    return ((node[1], dest) for dest in line_graph.graph.adj[node[1]])
+                    return (
+                        (node[1], dest)  # type: ignore[misc]
+                        for dest in line_graph.graph.neighbors(node[1])  # type: ignore[arg-type]
+                    )
                 return itertools.chain(
                     (
-                        (src, node[0])
-                        for src in line_graph.graph.adj[node[0]]
+                        (src, node[0])  # type: ignore[misc]
+                        for src in line_graph.graph.neighbors(node[0])  # type: ignore[arg-type]
                         if {node[0], src} != set(node)
                     ),
                     (
-                        (node[1], dest)
-                        for dest in line_graph.graph.adj[node[1]]
+                        (node[1], dest)  # type: ignore[misc]
+                        for dest in line_graph.graph.neighbors(node[1])  # type: ignore[arg-type]
                         if {node[1], dest} != set(node)
                     ),
                 )
@@ -532,10 +542,10 @@ class LineGraphView(Generic[_N]):
         -------
         bool
             True if the line graph is directed, False otherwise."""
-        return self._graph.is_directed()  # type: ignore[no-any-return]
+        return self._graph.is_directed()
 
     @property
-    def graph(self) -> Graph[_N] | DiGraph[_N]:
+    def graph(self) -> Graph[_N] | DiGraph[_N] | LineGraphView[_N]:
         """
         Get the underlying graph.
 

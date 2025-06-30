@@ -117,3 +117,48 @@ class TestLineGraphView(TestCase):
         undirected_graph.add_edges_from([(1, 2), (2, 3), (3, 1)])
         line_graph_view = nxlg.LineGraphView(undirected_graph)
         self.assertFalse(line_graph_view.is_multigraph())
+
+    def test_linegraph_linegraph(self):
+        undirected_graph = nx.cycle_graph(4)
+        line_graph_view = nxlg.LineGraphView(undirected_graph)
+        line_graph_view2 = nxlg.LineGraphView(line_graph_view)
+        self.assertEqual(
+            list(undirected_graph),
+            [0, 1, 2, 3],
+        )
+        self.assertEqual(
+            list(undirected_graph.edges),
+            [(0, 1), (0, 3), (1, 2), (2, 3)],
+        )
+        self.assertEqual(
+            list(undirected_graph.neighbors(0)),
+            [1, 3],
+        )
+        self.assertEqual(list(line_graph_view), [(0, 1), (0, 3), (1, 2), (2, 3)])
+        self.assertEqual(
+            list(line_graph_view.edges),
+            [((0, 1), (3, 0)), ((0, 1), (1, 2)), ((0, 3), (3, 2)), ((1, 2), (2, 3))],
+        )
+        self.assertEqual(
+            list(line_graph_view.neighbors((0, 1))),
+            [(3, 0), (1, 2)],
+        )
+        self.assertEqual(
+            list(line_graph_view2),
+            [((0, 1), (3, 0)), ((0, 1), (1, 2)), ((0, 3), (3, 2)), ((1, 2), (2, 3))],
+        )
+        self.assertEqual(
+            list(line_graph_view2.edges),
+            [
+                (((0, 1), (3, 0)), ((1, 2), (0, 1))),
+                (((0, 1), (3, 0)), ((3, 0), (2, 3))),
+                (((0, 1), (1, 2)), ((1, 2), (2, 3))),
+                (((0, 3), (3, 2)), ((1, 0), (0, 3))),
+                (((0, 3), (3, 2)), ((3, 2), (2, 1))),
+                (((1, 2), (2, 3)), ((2, 3), (3, 0))),
+            ],
+        )
+        self.assertEqual(
+            list(line_graph_view2.neighbors(((0, 1), (3, 0)))),
+            [((1, 2), (0, 1)), ((3, 0), (2, 3))],
+        )
