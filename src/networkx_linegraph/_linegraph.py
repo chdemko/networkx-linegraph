@@ -551,7 +551,7 @@ class LineGraphView(Generic[_N]):
 
         Returns
         -------
-        Graph | DiGraph
+        Graph | DiGraph | LineGraphView[_N]
             The underlying graph
 
         """
